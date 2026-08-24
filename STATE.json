@@ -1,0 +1,74 @@
+{
+  "schema_version": 2,
+  "project": "",
+  "born": "",
+  "meta": {
+    "total_incidents": 5,
+    "rules_added": 2,
+    "rules_removed": 0,
+    "last_rework_rate_30d": null,
+    "profile": {
+      "mode": "single",
+      "modifiers": [],
+      "default_components": [],
+      "changed": false
+    }
+  },
+  "rules": [
+    {
+      "id": "R01",
+      "text": "Day1 首次事故: go get 直连 proxy.golang.org 超时（IPv6 dial 失败）",
+      "born": "2026-08-20",
+      "incident": "Day1 首次事故: go get 直连 proxy.golang.org 超时（IPv6 dial 失败）",
+      "layer": "memory",
+      "valid_time": "2026-08-20 02:59",
+      "hits": 2,
+      "last_hit": "2026-08-20 03:22",
+      "last_eval": null
+    },
+    {
+      "id": "R02",
+      "text": "API 密钥只从环境变量读取（FASTGPT_CHAT_API_KEY / OPENCODE_API_KEY），运行时不落配置/日志/档案/回复；--api-key 仅临时覆盖",
+      "born": "2026-08-20",
+      "incident": "API 密钥只从环境变量读取（FASTGPT_CHAT_API_KEY / OPENCODE_API_KEY），运行时不落配置/日志/档案/回复；--api-key 仅临时覆盖",
+      "layer": "constraint",
+      "valid_time": "2026-08-20 06:42",
+      "hits": 0,
+      "last_hit": null,
+      "last_eval": null
+    }
+  ],
+  "archived": [],
+  "events": [
+    {
+      "ts": "2026-08-20 02:59",
+      "type": "rule_added",
+      "rule": "R01",
+      "detail": "Day1 首次事故: go get 直连 proxy.golang.org 超时（IPv6 dial 失败）"
+    },
+    {
+      "ts": "2026-08-20 02:59",
+      "type": "explanation",
+      "rule": "R01",
+      "detail": "拉取 cobra 依赖前需设置 HTTP(S)_PROXY=http://127.0.0.1:7897，设置后成功"
+    },
+    {
+      "ts": "2026-08-20 03:22",
+      "type": "explanation",
+      "rule": "R01",
+      "detail": "git 克隆大仓库 pack 卡 0 字节：设置 http.postBuffer=524288000 + --depth 1 浅克隆后成功（参考源码无需全历史）"
+    },
+    {
+      "ts": "2026-08-20 04:52",
+      "type": "rework",
+      "rule": null,
+      "detail": "config show 曾因显式缺失配置文件报错而失败（首跑 UX 差）；改为 Load 对缺失文件回落默认值后解决"
+    },
+    {
+      "ts": "2026-08-20 06:42",
+      "type": "rule_added",
+      "rule": "R02",
+      "detail": "API 密钥只从环境变量读取（FASTGPT_CHAT_API_KEY / OPENCODE_API_KEY），运行时不落配置/日志/档案/回复；--api-key 仅临时覆盖"
+    }
+  ]
+}

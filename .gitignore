@@ -1,0 +1,15 @@
+# 二进制产物
+/fastgpt
+/fastgpt.exe
+*.exe
+
+# 编译缓存
+/dist/
+/release/
+
+# 参考源码（只读，不纳入版本控制）
+/fastgpt-source/
+
+# 编辑器
+.vscode/
+.idea/

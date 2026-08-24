@@ -1,0 +1,25 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Bash(git push*)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python .claude/hooks/record-error.py --rule R01 --from-stdin --dedup-window 300"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python .claude/hooks/handoff-log.py --from-transcript \"%s\""
+          }
+        ]
+      }
+    ]
+  }
+}

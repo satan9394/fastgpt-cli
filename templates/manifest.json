@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "harness_version": "4.11.0",
+  "created_at": "",
+  "project": {
+    "name": "",
+    "type": "default",
+    "runtime": ""
+  },
+  "components": {
+    "instruction": "",
+    "scripts": [],
+    "domain_skills": [],
+    "state_json": false,
+    "harness_config": false,
+    "hooks": { "configured": false, "file": ".claude/settings.json" },
+    "handoff": "HANDOFF.md",
+    "architecture": "docs/ARCHITECTURE.md",
+    "notes": false
+  },
+  "verify": {
+    "audit_exit": null,
+    "wiring_ok": null,
+    "checked_at": ""
+  }
+}

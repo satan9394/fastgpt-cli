@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "harness_version": "4.11.0",
+  "created_at": "2026-08-20T02:37:34",
+  "project": {
+    "name": "fastgpt-cli",
+    "type": "default",
+    "runtime": "claude-code"
+  },
+  "components": {
+    "instruction": "CLAUDE.md",
+    "scripts": [
+      "audit.py",
+      "record-error.py",
+      "bootstrap.py",
+      "gen-eval-fixtures.py",
+      "skill-router.py",
+      "gate-dag.py",
+      "state-diff-merge.py",
+      "harness-mcp.py",
+      "note-lifecycle.py",
+      "handoff-log.py"
+    ],
+    "domain_skills": [
+      "harness-dev",
+      "harness-pr-review",
+      "harness-requirements",
+      "harness-ui-design",
+      "fastgpt"
+    ],
+    "state_json": true,
+    "harness_config": true,
+    "hooks": {
+      "configured": true,
+      "file": ".claude/settings.json"
+    },
+    "handoff": "HANDOFF.md",
+    "architecture": "docs/ARCHITECTURE.md",
+    "notes": true
+  },
+  "verify": {
+    "audit_exit": 0,
+    "wiring_ok": true,
+    "checked_at": "2026-08-20T02:37:34"
+  }
+}

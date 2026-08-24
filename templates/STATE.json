@@ -1,0 +1,19 @@
+{
+  "schema_version": 2,
+  "project": "",
+  "born": "",
+  "meta": {
+    "total_incidents": 0,
+    "rules_added": 0,
+    "rules_removed": 0,
+    "last_rework_rate_30d": null,
+    "profile": {
+      "mode": "single",
+      "modifiers": [],
+      "default_components": [],
+      "changed": false
+    }
+  },
+  "rules": [],
+  "archived": []
+}

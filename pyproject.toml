@@ -1,0 +1,58 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "fastgpt-cli"
+version = "0.1.0"
+description = "Agent-native CLI for FastGPT AI application lifecycle management (dataset/kb/app/workflow/agent/evaluation)."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "satan9394" }]
+dependencies = [
+    "typer>=0.9",
+    "pydantic>=2.0",
+    "pyyaml>=6.0",
+    "requests>=2.31",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7",
+    "ruff>=0.6",
+]
+
+[project.scripts]
+fastgpt = "fastgptcli.cli.main:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["fastgptcli*"]
+
+[tool.setuptools.package-data]
+fastgptcli = ["**/*.json"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 110
+src = ["."]
+target-version = "py310"
+extend-exclude = [
+    "scripts",        # harness governance scripts (out of scope)
+    ".claude",        # harness hooks/governance scripts (out of scope)
+    "fastgpt-source", # read-only reference clone
+    "notes",
+    "docs",
+    "cmd",
+    "internal",
+    "pkg",
+    "fastgptcli.egg-info",
+]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B"]
+ignore = []
