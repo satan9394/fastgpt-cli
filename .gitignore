@@ -2,19 +2,54 @@
 /fastgpt
 /fastgpt.exe
 *.exe
+*.dll
+*.so
+*.dylib
 
 # 编译缓存
 /dist/
 /release/
+/build/
+*.egg-info/
+*.egg
 
-# 参考源码（只读，不纳入版本控制）
-/fastgpt-source/
+# Python 缓存
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.pyc
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.tox/
+.venv/
+venv/
+env/
+
+# 临时文件
+*.txt
+*.log
+*.tmp
+*.temp
+*.bak
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
 
 # 编辑器
 .vscode/
 .idea/
-__pycache__/
-*.pyc
-.pytest_cache/
-.ruff_cache/
-*.txt
+*.sublime-project
+*.sublime-workspace
+
+# 参考源码（只读，不纳入版本控制）
+/fastgpt-source/
+
+# 环境变量
+.env
+.env.local
+.env.*.local
