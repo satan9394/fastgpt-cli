@@ -13,3 +13,8 @@
 # 编辑器
 .vscode/
 .idea/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+*.txt
