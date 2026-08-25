@@ -4,20 +4,20 @@
 #   - 裁掉: mcp-server / opensandbox / volume-manager / agent-sandbox-proxy / aiproxy(+pg) / prepull
 # 端口: app=3100（3000 已被 new-api 占用）, minio=9000/9001（无冲突）
 
-x-default-root-psw: &x-default-root-psw '1234'
+x-default-root-psw: &x-default-root-psw '${FASTGPT_ROOT_PSW:-1234}'
 x-fe-domain: &x-fe-domain 'http://localhost:3100'
-x-system-key: &x-system-key 'local-fastgpt-root-key-2026'
-x-plugin-auth-token: &x-plugin-auth-token 'fastgpt_plugin_auth_token_32char'
-x-code-sandbox-token: &x-code-sandbox-token 'codesandbox'
+x-system-key: &x-system-key '${FASTGPT_SYSTEM_KEY:-change-me-in-production}'
+x-plugin-auth-token: &x-plugin-auth-token '${FASTGPT_PLUGIN_TOKEN:-change-me-in-production}'
+x-code-sandbox-token: &x-code-sandbox-token '${FASTGPT_SANDBOX_TOKEN:-change-me-in-production}'
 
 x-share-db-config: &x-share-db-config
-  MONGODB_URI: mongodb://myusername:mypassword@fastgpt-mongo:27017/fastgpt?authSource=admin
+  MONGODB_URI: mongodb://${MONGO_USER:-fastgpt}:${MONGO_PASSWORD:-change-me}@fastgpt-mongo:27017/fastgpt?authSource=admin
   DB_MAX_LINK: 100
-  REDIS_URL: redis://default:mypassword@fastgpt-redis:6379
+  REDIS_URL: redis://default:${REDIS_PASSWORD:-change-me}@fastgpt-redis:6379
   STORAGE_VENDOR: minio
   STORAGE_REGION: us-east-1
-  STORAGE_ACCESS_KEY_ID: minioadmin
-  STORAGE_SECRET_ACCESS_KEY: minioadmin
+  STORAGE_ACCESS_KEY_ID: ${MINIO_ACCESS_KEY:-minioadmin}
+  STORAGE_SECRET_ACCESS_KEY: ${MINIO_SECRET_KEY:-minioadmin}
   STORAGE_PUBLIC_BUCKET: fastgpt-public
   STORAGE_PRIVATE_BUCKET: fastgpt-private
   STORAGE_DOWNLOAD_URL_MODE: short-proxy
@@ -41,7 +41,7 @@ x-no-proxy-config: &x-no-proxy-config
   https_proxy: http://host.docker.internal:7897
 
 x-vec-config: &x-vec-config
-  PG_URL: postgresql://username:password@fastgpt-vector:5432/postgres
+  PG_URL: postgresql://${PG_USER:-fastgpt}:${PG_PASSWORD:-change-me}@fastgpt-vector:5432/postgres
 
 services:
   fastgpt-vector:
@@ -51,8 +51,8 @@ services:
     networks:
       - data
     environment:
-      - POSTGRES_USER=username
-      - POSTGRES_PASSWORD=password
+      - POSTGRES_USER=${PG_USER:-fastgpt}
+      - POSTGRES_PASSWORD=${PG_PASSWORD:-change-me}
       - POSTGRES_DB=postgres
     volumes:
       - fastgpt-pg:/var/lib/postgresql/data
@@ -70,12 +70,12 @@ services:
       - data
     command: mongod --keyFile /data/mongodb.key --replSet rs0
     environment:
-      - MONGO_INITDB_ROOT_USERNAME=myusername
-      - MONGO_INITDB_ROOT_PASSWORD=mypassword
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_USER:-fastgpt}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD:-change-me}
     volumes:
       - fastgpt-mongo:/data/db
     healthcheck:
-      test: ['CMD', 'mongo', '-u', 'myusername', '-p', 'mypassword', '--authenticationDatabase', 'admin', '--eval', "db.adminCommand('ping')"]
+      test: ['CMD', 'mongo', '-u', '${MONGO_USER:-fastgpt}', '-p', '${MONGO_PASSWORD:-change-me}', '--authenticationDatabase', 'admin', '--eval', "db.adminCommand('ping')"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -97,11 +97,11 @@ services:
           })
         }' > /data/initReplicaSet.js
         exec docker-entrypoint.sh "$$@" &
-        until mongo -u myusername -p mypassword --authenticationDatabase admin --eval "print('waited for connection')"; do
+        until mongo -u ${MONGO_USER:-fastgpt} -p ${MONGO_PASSWORD:-change-me} --authenticationDatabase admin --eval "print('waited for connection')"; do
           echo "Waiting for MongoDB to start..."
           sleep 2
         done
-        mongo -u myusername -p mypassword --authenticationDatabase admin /data/initReplicaSet.js
+        mongo -u ${MONGO_USER:-fastgpt} -p ${MONGO_PASSWORD:-change-me} --authenticationDatabase admin /data/initReplicaSet.js
         wait $$!
 
   fastgpt-redis:
@@ -111,9 +111,9 @@ services:
       - data
     restart: always
     command: |
-      redis-server --requirepass mypassword --loglevel warning --maxclients 10000 --appendonly yes --save 60 10 --maxmemory 4gb --maxmemory-policy noeviction
+      redis-server --requirepass ${REDIS_PASSWORD:-change-me} --loglevel warning --maxclients 10000 --appendonly yes --save 60 10 --maxmemory 4gb --maxmemory-policy noeviction
     healthcheck:
-      test: ['CMD', 'redis-cli', '-a', 'mypassword', 'ping']
+      test: ['CMD', 'redis-cli', '-a', '${REDIS_PASSWORD:-change-me}', 'ping']
       interval: 10s
       timeout: 3s
       retries: 3
@@ -131,8 +131,8 @@ services:
       - '9000:9000'
       - '9001:9001'
     environment:
-      - MINIO_ROOT_USER=minioadmin
-      - MINIO_ROOT_PASSWORD=minioadmin
+      - MINIO_ROOT_USER=${MINIO_ACCESS_KEY:-minioadmin}
+      - MINIO_ROOT_PASSWORD=${MINIO_SECRET_KEY:-minioadmin}
     volumes:
       - fastgpt-minio:/data
     command: server /data --console-address ":9001"
@@ -174,9 +174,9 @@ services:
       DB_MAX_LINK: 5
       SYNC_INDEX: true
       SYSTEM_MAX_STRING_LENGTH_M: 100
-      FILE_TOKEN_KEY: filetokenkey
-      AES256_SECRET_KEY: fastgptsecret
-      INVOKE_TOKEN_SECRET: fastgpt_invoke_token_secret_32_chars_min
+      FILE_TOKEN_KEY: ${FILE_TOKEN_KEY:-change-me-in-production}
+      AES256_SECRET_KEY: ${AES256_SECRET_KEY:-change-me-in-production}
+      INVOKE_TOKEN_SECRET: ${INVOKE_TOKEN_SECRET:-change-me-in-production}
       MULTIPLE_DATA_TO_BASE64: false
       PLUGIN_BASE_URL: http://fastgpt-plugin:3000
       PLUGIN_TOKEN: *x-plugin-auth-token
